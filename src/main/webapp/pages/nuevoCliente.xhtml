@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+<h:head />
+<h:body>
+	<h:form>
+		<div class="ui-g">
+			<div class="ui-g-6">
+				<p:graphicImage library="img" name="logo.png"  width="100" height="100"/>
+			</div>
+			<div class="ui-g-4" />
+			<div class="ui-g-2">Usuario Logueado</div>
+		</div>
+
+		<div class="ui-g">
+			<div class="ui-g-12">
+				<h2 style="margin-top: 0">Listado de promociones</h2>
+			</div>
+		</div>
+
+		<!-- Filtros -->
+		<div class="ui-g">
+			<div class="ui-g-12">
+				<h:outputLabel value="Tipo cliente: " />
+				<p:autoComplete id="tipoP"
+					value="#{clienteManagedBean.tipoCliente}"
+					completeMethod="#{clienteManagedBean.listTipoClientes}"
+					converter="parametroConverter" var="tipoCliente"
+					itemLabel="#{tipoCliente.PD_NombreElemento}" itemValue="#{tipoCliente}"
+					dropdown="true" />
+			</div>
+			<div class="ui-g-12">
+				<h:outputLabel for="name" value="Nombres: " />
+				<p:inputText id="name"
+					value="#{clienteManagedBean.nombres}">
+					<f:validateLength minimum="5" />
+					<p:ajax event="blur" update="nameMsg" />
+				</p:inputText>
+				<p:message id="nameMsg" for="name" display="icon" />
+			</div>
+			<div class="ui-g-12">
+				<h:outputLabel value="Tipo documento: " />
+				<p:autoComplete id="tipo1"
+					value="#{clienteManagedBean.tipoDocumento}"
+					completeMethod="#{clienteManagedBean.listTipoDocumento}"
+					converter="parametroConverter" var="tipoD"
+					itemLabel="#{tipoD.PD_NombreElemento}" itemValue="#{tipoD}"
+					dropdown="true" />
+			</div>
+			<div class="ui-g-12">
+				<h:outputLabel for="name1" value="Número documento: " />
+				<p:inputText id="name1"
+					value="#{clienteManagedBean.numeroDocumento}">
+					<f:validateLength minimum="5" />
+					<p:ajax event="blur" update="nameMsg1" />
+				</p:inputText>
+				<p:message id="nameMsg1" for="name1" display="icon" />
+			</div>
+			<div class="ui-g-12">
+				<h:outputLabel for="name2" value="Dirección: " />
+				<p:inputText id="name2"
+					value="#{clienteManagedBean.direccion}">
+					<f:validateLength minimum="5" />
+					<p:ajax event="blur" update="nameMsg2" />
+				</p:inputText>
+				<p:message id="nameMsg2" for="name2" display="icon" />
+			</div>
+			<div class="ui-g-12">
+				<h:outputLabel for="name3" value="Departamento: " />
+				<p:inputText id="name3"
+					value="#{clienteManagedBean.departamento}">
+					<f:validateLength minimum="5" />
+					<p:ajax event="blur" update="nameMsg3" />
+				</p:inputText>
+				<p:message id="nameMsg3" for="name3" display="icon" />
+			</div>
+			<div class="ui-g-12">
+				<h:outputLabel for="name4" value="Provincia: " />
+				<p:inputText id="name4"
+					value="#{clienteManagedBean.provincia}">
+					<f:validateLength minimum="5" />
+					<p:ajax event="blur" update="nameMsg4" />
+				</p:inputText>
+				<p:message id="nameMsg4" for="name4" display="icon" />
+			</div>
+			<div class="ui-g-12">
+				<h:outputLabel for="name5" value="Distrito " />
+				<p:inputText id="name5"
+					value="#{clienteManagedBean.distrito}">
+					<f:validateLength minimum="5" />
+					<p:ajax event="blur" update="nameMsg5" />
+				</p:inputText>
+				<p:message id="nameMsg5" for="name5" display="icon" />
+			</div>
+			<div class="ui-g-12">
+				<h:outputLabel for="name6" value="Teléfono celular: " />
+				<p:inputText id="name6"
+					value="#{clienteManagedBean.telefono}">
+					<f:validateLength minimum="5" />
+					<p:ajax event="blur" update="nameMsg6" />
+				</p:inputText>
+				<p:message id="nameMsg6" for="name6" display="icon" />
+			</div>
+			<div class="ui-g-12">
+				<h:outputLabel for="name7" value="Correo electrónico: " />
+				<p:inputText id="name7"
+					value="#{clienteManagedBean.email}">
+					<f:validateLength minimum="5" />
+					<p:ajax event="blur" update="nameMsg7" />
+				</p:inputText>
+				<p:message id="nameMsg7" for="name7" display="icon" />
+			</div>
+		</div>
+
+		<div class="ui-g-4">
+<!-- 			<p:commandButton id="addPromocion" value="Agregar" -->
+<!-- 				action="#{clienteManagedBean.addCliente}" ajax="false" /> -->
+<!-- 			<p:spacer width="20px"> -->
+			<p:commandButton id="cancelarCliente" value="Cancelar" ajax="false"
+						type="button" onclick="PF('dlg11').hide();" />
+		</div>
+	</h:form>
+</h:body>
+</html>

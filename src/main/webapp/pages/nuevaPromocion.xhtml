@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+<h:head />
+<h:body>
+	<h:form>
+		<div class="ui-g">
+			<div class="ui-g-6">
+				<p:graphicImage library="img" name="logo.png" width="100"
+					height="100" />
+			</div>
+			<div class="ui-g-4" />
+			<div class="ui-g-2">Usuario Logueado</div>
+			<div class="ui-g-2">
+				<p:growl id="growl" showDetail="true" sticky="true" />
+			</div>
+		</div>
+
+		<div class="ui-g">
+			<div class="ui-g-12 ui-md-2">
+				<p:menu style="width: 150px;">
+					<p:menuitem value="Comercialización" url="/pages/ventas.jsf"
+						icon="ui-icon-plus" />
+					<p:menuitem value="Promociones" url="/pages/listadoPromociones.jsf"
+						icon="ui-icon-plus" />
+					<p:menuitem value="Reportes" actionListener="#{menuView.update}"
+						icon="ui-icon-plus" />
+					<p:menuitem value="Pagos" actionListener="#{menuView.update}"
+						icon="ui-icon-plus" />
+					<p:menuitem value="Despacho" actionListener="#{menuView.update}"
+						icon="ui-icon-plus" />
+					<p:menuitem value="Salir" actionListener="#{menuView.update}"
+						icon="ui-icon-plus" />
+				</p:menu>
+			</div>
+			<div class="ui-g-12 ui-md-10 ui-g-nopad">
+				<div class="ui-g">
+					<div class="ui-g-12">
+						<h2 style="margin-top: 0">Registro Promoción</h2>
+					</div>
+				</div>
+
+				<!-- Datos promocion -->
+				<div class="ui-g">
+					<div class="ui-g-4">
+						<h:outputLabel for="name" value="Nombre promoción: " />
+						<p:inputText id="name" value="#{promocionManagedBean.nombre}"
+							style="width: 60%;">
+						</p:inputText>
+						<p:message id="nameMsg" for="name" display="icon"
+							showSummary="false" showDetail="false" />
+					</div>
+					<div class="ui-g-4">
+						<h:outputLabel for="validez_desde" value="Validez: " />
+						<p:calendar id="validez_desde"
+							value="#{promocionManagedBean.pr_fechaInicio}"  pattern="dd/MM/yyyy"
+							mindate="#{promocionManagedBean.pr_fechaInicio}" showOn="button"
+							/>
+					</div>
+					<div class="ui-g-4">
+						<h:outputLabel for="validez_hasta" value="a: " />
+						<p:calendar id="validez_hasta"
+							value="#{promocionManagedBean.pr_fechaVenc}" pattern="dd/MM/yyyy"
+							mindate="#{promocionManagedBean.pr_fechaInicio}" showOn="button"/>
+					</div>
+				</div>
+
+				<!-- Productos -->
+				<div class="ui-g">
+					<div class="ui-g-12">
+						<p:fieldset legend="Productos" style="margin-bottom:20px">
+							<div class="ui-g">
+								<div class="ui-g-8 ui-g-nopad">
+
+									<div class="ui-g-12">
+										<h:panelGrid columns="4" cellpadding="5">
+											<p:selectOneRadio id="customRadio" 
+												value="#{promocionManagedBean.pr_opcionProducto}"
+												layout="custom">
+												<f:selectItem itemLabel="Todos los artículos" itemValue="1" />
+												<f:selectItem itemLabel="Por Género literario" itemValue="2" />
+												<f:selectItem itemLabel="Por tipo de producto" itemValue="3" />
+												<f:selectItem itemLabel="Por producto(s) específico(s)"
+													itemValue="4" />
+											</p:selectOneRadio>
+											<h:panelGrid columns="3" cellpadding="5">
+												<p:radioButton id="opt1" for="customRadio" itemIndex="0" />
+												<h:outputLabel for="opt1" value="Todos los artículos" />
+												<h:outputLabel value="" />
+
+												<p:radioButton id="opt2" for="customRadio" itemIndex="1" />
+												<h:outputLabel for="opt2" value="Por Género literario" />
+												<p:autoComplete for="opt2" id="generos"
+													value="#{promocionManagedBean.generoLiterario}"
+													completeMethod="#{promocionManagedBean.listGeneros}"
+													converter="parametroConverter" var="genero"
+													itemLabel="#{genero.PD_NombreElemento}"
+													itemValue="#{genero}" dropdown="true">
+													<p:ajax event="itemSelect"
+														listener="#{promocionManagedBean.actualizarRadioProd2}"
+														update="customRadio">
+													</p:ajax>
+												</p:autoComplete>
+
+												<p:radioButton id="opt3" for="customRadio" itemIndex="2" />
+												<h:outputLabel for="opt3" value="Por tipo de producto" />
+												<p:autoComplete id="tipoProd"
+													value="#{promocionManagedBean.tipoProducto}"
+													completeMethod="#{promocionManagedBean.listTiposProducto}"
+													converter="parametroConverter" var="tipoProducto"
+													itemLabel="#{tipoProducto.PD_NombreElemento}"
+													itemValue="#{tipoProducto}" dropdown="true">
+													<p:ajax event="itemSelect"
+														listener="#{promocionManagedBean.actualizarRadioProd3}"
+														update="customRadio">
+													</p:ajax>
+												</p:autoComplete>
+
+												<p:radioButton id="opt4" for="customRadio" itemIndex="3" />
+												<h:outputLabel for="opt4"
+													value="Por producto(s) específico(s)" />
+												<p:autoComplete id="especifico"
+													value="#{promocionManagedBean.productoEspecifico}"
+													completeMethod="#{promocionManagedBean.listProductos}"
+													converter="productoConverter" var="producto"
+													itemLabel="#{producto.PD_Descripcion}"
+													itemValue="#{producto}">
+												</p:autoComplete>
+												<p:commandButton icon="ui-icon-plus" title="Icon Only"
+													action="#{promocionManagedBean.agregarProducto}"
+													ajax="false" update="tablaProd" />
+											</h:panelGrid>
+										</h:panelGrid>
+									</div>
+								</div>
+								<div class="ui-g-4 ui-g-nopad">
+									<div class="ui-g-12">
+										<p:dataTable var="producto" id="tablaProd"
+											rendered="#{promocionManagedBean.pr_opcionProducto eq '4'}"
+											value="#{promocionManagedBean.listaProductoEspecifico}"
+											rows="3" paginator="false">
+											<p:column headerText="Código">
+												<h:outputText value="#{producto.PD_CodigoProducto}" />
+											</p:column>
+											<p:column headerText="Descripción">
+												<h:outputText value="#{producto.PD_Descripcion}" />
+											</p:column>
+										</p:dataTable>
+									</div>
+								</div>
+							</div>
+						</p:fieldset>
+					</div>
+				</div>
+
+				<!-- Clientes -->
+				<div class="ui-g">
+					<div class="ui-g-12">
+						<p:fieldset legend="Clientes" style="margin-bottom:20px">
+							<div class="ui-g">
+								<div class="ui-g-8 ui-g-nopad">
+
+									<div class="ui-g-12">
+										<h:panelGrid columns="3" cellpadding="5">
+											<p:selectOneRadio id="clienteRadio" 
+												value="#{promocionManagedBean.pr_opcionCliente}"
+												layout="custom">
+												<f:selectItem itemLabel="Todos los clientes" itemValue="1" />
+												<f:selectItem itemLabel="Sólo por tipo de cliente"
+													itemValue="2" />
+												<f:selectItem itemLabel="Por producto(s) específico(s)"
+													itemValue="3" />
+												<f:ajax event="change" execute="@all" render="tablaClte" />
+											</p:selectOneRadio>
+
+											<h:panelGrid columns="3" cellpadding="5">
+												<p:radioButton id="optCl1" for="clienteRadio" itemIndex="0" />
+												<h:outputLabel for="optCl1" value="Todos los clientes" />
+												<h:outputLabel value="" />
+												<p:radioButton id="optCl2" for="clienteRadio" itemIndex="1" />
+												<h:outputLabel for="optCl2" value="Sólo por tipo de cliente" />
+												<p:autoComplete id="tipoCliente"
+													value="#{promocionManagedBean.tipoCliente}"
+													completeMethod="#{promocionManagedBean.listTiposCliente}"
+													converter="parametroConverter" var="tipoCli"
+													itemLabel="#{tipoCli.PD_NombreElemento}"
+													itemValue="#{tipoCli}" dropdown="true">
+													<p:ajax event="itemSelect"
+														listener="#{promocionManagedBean.actualizarRadioCli1}"
+														update="clienteRadio">
+													</p:ajax>
+												</p:autoComplete>
+												<p:radioButton id="optCl3" for="clienteRadio" itemIndex="2" />
+												<h:outputLabel for="optCl3" value="Sólo para un cliente(s)" />
+												<p:autoComplete id="clienteEspecifico"
+													value="#{promocionManagedBean.clienteEspecifico}"
+													completeMethod="#{promocionManagedBean.listClientes}"
+													converter="clienteConverter" var="cliente"
+													itemLabel="#{cliente.PE_Nombre} #{cliente.PE_ApellidoPaterno} #{cliente.PE_ApellidoMaterno} "
+													itemValue="#{cliente}">
+												</p:autoComplete>
+												<p:commandButton icon="ui-icon-plus" title="Icon Only"
+													action="#{promocionManagedBean.agregarCliente}"
+													ajax="false" update="tablaClte" />
+											</h:panelGrid>
+										</h:panelGrid>
+									</div>
+								</div>
+								<div class="ui-g-4 ui-g-nopad">
+									<div class="ui-g-12">
+										<p:dataTable var="cliente" id="tablaClte"
+											rendered="#{promocionManagedBean.pr_opcionCliente eq '3'}"
+											value="#{promocionManagedBean.listaClienteEspecifico}"
+											rows="3" paginator="false">
+											<p:column headerText="Documento">
+												<h:outputText value="#{cliente.PE_NumeroDocIdentidad}" />
+											</p:column>
+											<p:column headerText="Descripción">
+												<h:outputText value="#{cliente.nombreCompleto}" />
+											</p:column>
+										</p:dataTable>
+									</div>
+								</div>
+							</div>
+						</p:fieldset>
+					</div>
+				</div>
+
+				<!-- Promocion -->
+				<p:fieldset legend="Promoción" style="margin-bottom:20px">
+					<p:selectOneRadio id="promoRadio" 
+						value="#{promocionManagedBean.pr_opcionPromocion}" layout="custom">
+						<f:selectItem itemLabel="Cantidades ofrecidos" itemValue="21" />
+						<f:selectItem itemLabel="Bajar el precio unitario en"
+							itemValue="20" />
+						<f:selectItem itemLabel="Descuento fijo de" itemValue="19" />
+						<f:selectItem itemLabel="Montos mayores a" itemValue="22" />
+					</p:selectOneRadio>
+					<h:panelGroup id="perfbyselection">
+						<div class="ui-g">
+							<div class="ui-g-3">
+								<p:radioButton id="optPr1siOp4" for="promoRadio" itemIndex="0"
+									rendered="#{promocionManagedBean.pr_opcionProducto eq '4'}" />
+								<h:outputLabel for="optPr1si"
+									value="  Cantidades ofrecidos - Por cada "
+									rendered="#{promocionManagedBean.pr_opcionProducto eq '4'}" />
+							</div>
+							<div class="ui-g-8">
+								<p:spinner id="porCantidadsi" min="1"
+									value="#{promocionManagedBean.promoPorCantCantidad}"
+									rendered="#{promocionManagedBean.pr_opcionProducto eq '4'}" />
+								<h:outputLabel for="optPr1si" value=" unid. el costo es: "
+									rendered="#{promocionManagedBean.pr_opcionProducto eq '4'}" />
+								<p:inputNumber id="precioCantidadsi" min="1"
+									value="#{promocionManagedBean.promoPorCantPrecio}"
+									symbol=" PEN" symbolPosition="s" decimalSeparator=","
+									thousandSeparator="."
+									rendered="#{promocionManagedBean.pr_opcionProducto eq '4'}">
+									<p:ajax update="precioCantidadsi" />
+									<p:ajax event="change"
+										listener="#{promocionManagedBean.actualizarRadioProm21}"
+										update="promoRadio">
+									</p:ajax>
+								</p:inputNumber>
+							</div>
+						</div>
+						<div class="ui-g">
+							<div class="ui-g-6">
+								<p:radioButton id="optPr2siOp4" for="promoRadio" itemIndex="1"
+									rendered="#{promocionManagedBean.pr_opcionProducto eq '4'}" />
+								<h:outputLabel for="optPr2si"
+									value="  Bajar el precio unitario en   "
+									rendered="#{promocionManagedBean.pr_opcionProducto eq '4'}" />
+								<p:inputNumber id="rebajasi"
+									value="#{promocionManagedBean.promoRebajaPrecio}" symbol=" PEN"
+									symbolPosition="s" decimalSeparator="," thousandSeparator="."
+									rendered="#{promocionManagedBean.pr_opcionProducto eq '4'}">
+									<p:ajax update="rebajasi" />
+									<p:ajax event="change"
+										listener="#{promocionManagedBean.actualizarRadioProm20}"
+										update="promoRadio">
+									</p:ajax>
+								</p:inputNumber>
+							</div>
+						</div>
+
+						<div class="ui-g">
+							<div class="ui-g-3">
+								<p:radioButton id="optPr1" for="promoRadio" itemIndex="0"
+									rendered="#{promocionManagedBean.pr_opcionProducto ne '4'}"
+									disabled="true" />
+								<h:outputLabel for="optPr1"
+									value="  Cantidades ofrecidos - Por cada "
+									rendered="#{promocionManagedBean.pr_opcionProducto ne '4'}" />
+							</div>
+							<div class="ui-g-8">
+								<p:spinner id="porCantidad"
+									value="#{promocionManagedBean.promoPorCantCantidad}"
+									rendered="#{promocionManagedBean.pr_opcionProducto ne '4'}"
+									disabled="true" />
+								<h:outputLabel for="optPr1" value=" unid. el costo es: "
+									rendered="#{promocionManagedBean.pr_opcionProducto ne '4'}" />
+								<p:inputNumber id="precioCantidad"
+									value="#{promocionManagedBean.promoPorCantPrecio}"
+									symbol=" PEN" symbolPosition="s" decimalSeparator=","
+									thousandSeparator="."
+									rendered="#{promocionManagedBean.pr_opcionProducto ne '4'}"
+									disabled="true">
+									<p:ajax update="precioCantidad" />
+									<p:ajax event="change"
+										listener="#{promocionManagedBean.actualizarRadioProm19}"
+										update="promoRadio">
+									</p:ajax>
+								</p:inputNumber>
+							</div>
+						</div>
+						<div class="ui-g">
+							<div class="ui-g-6">
+								<p:radioButton id="optPr2" for="promoRadio" itemIndex="1"
+									rendered="#{promocionManagedBean.pr_opcionProducto ne '4'}"
+									disabled="true" />
+								<h:outputLabel for="optPr2"
+									value="  Bajar el precio unitario en   "
+									rendered="#{promocionManagedBean.pr_opcionProducto ne '4'}" />
+								<p:inputNumber id="rebaja"
+									value="#{promocionManagedBean.promoRebajaPrecio}" symbol=" PEN"
+									symbolPosition="s" decimalSeparator="," thousandSeparator="."
+									rendered="#{promocionManagedBean.pr_opcionProducto ne '4'}"
+									disabled="true">
+									<p:ajax update="rebaja" />
+									<p:ajax event="click"
+										listener="#{promocionManagedBean.actualizarRadioProm22}"
+										update="promoRadio">
+									</p:ajax>
+								</p:inputNumber>
+							</div>
+						</div>
+
+					</h:panelGroup>
+					<div class="ui-g">
+						<div class="ui-g-6">
+							<p:radioButton id="optPr3" for="promoRadio" itemIndex="2" />
+							<h:outputLabel for="optPr3" value="  Descuento fijo de    " />
+							<p:inputNumber id="porcentaje" minValue="1.00"
+								value="#{promocionManagedBean.promoRebajaPorcentaje}" symbol="%"
+								symbolPosition="s" emptyValue="empty">
+								<p:ajax update="porcentaje" />
+							</p:inputNumber>
+						</div>
+					</div>
+					<div class="ui-g">
+						<div class="ui-g-12">
+							<p:radioButton id="optPr4" for="promoRadio" itemIndex="3" />
+							<h:outputLabel for="optPr4" value="  Montos mayores a    " />
+							<p:inputNumber id="porMayor"
+								value="#{promocionManagedBean.promoPorMontoMayor}" symbol=" PEN"
+								symbolPosition="s" decimalSeparator="," thousandSeparator=".">
+								<p:ajax update="porMayor" />
+							</p:inputNumber>
+							<h:outputLabel for="optPr4" value="  el descuento es de " />
+							<p:inputNumber id="precioporMayor"
+								value="#{promocionManagedBean.promoPorMontoMayorPrecio}"
+								symbol=" PEN" symbolPosition="s" decimalSeparator=","
+								thousandSeparator=".">
+								<p:ajax update="precioporMayor" />
+							</p:inputNumber>
+						</div>
+					</div>
+				</p:fieldset>
+
+				<div class="ui-g">
+					<div class="ui-g-9" />
+					<div class="ui-g-3">
+						<p:commandButton id="addPromocion" value="Aceptar" ajax="false"
+								action="#{promocionManagedBean.validar}"
+								onsuccess="PF('dlg3').show();" />
+					</div>
+				</div>
+			</div>
+		</div>
+		<p:dialog header="Generar Promoción" widgetVar="dlg3" modal="true">
+			<div class="ui-g">
+				<div class="ui-g-12">
+					<h:outputText value="¿Desea confirmar el registrar la promoción?" />
+				</div>
+				<div class="ui-g-6" />
+				<div class="ui-g-3">
+					<p:commandButton id="okOC" value="Aceptar" validateClient="true"
+						ajax="false" action="#{promocionManagedBean.addPromocion}"
+						styleClass="ui-confirmdialog-yes" icon="ui-icon-check"
+						oncomplete="dlg3.hide()" />
+				</div>
+				<div class="ui-g-3">
+					<p:commandButton id="nookOC" value="Cancelar" ajax="false"
+						type="button" styleClass="ui-confirmdialog-no"
+						icon="ui-icon-close" onclick="PF('dlg3').hide();" />
+				</div>
+			</div>
+		</p:dialog>
+
+	</h:form>
+</h:body>
+</html>

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<pageflow:Pageflow xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:pageflow="http://www.sybase.com/suade/pageflow" id="pf14890202495250" configfile="/promociones-ventas/src/main/webapp/WEB-INF/faces-config.xml">
+  <nodes xsi:type="pageflow:PFPage" name="pages/index.xhtml" id="pf14890203591416" referenceLink="//@navigationRule.0/@fromViewId|" outlinks="pf14890203591417 pf14890203591418" path="/pages/autocomplete.xhtml"/>
+  <nodes xsi:type="pageflow:PFPage" name="pages/success.xhtml" id="pf14890203591419" referenceLink="//@navigationRule.0/@navigationCase.0/@toViewId|" inlinks="pf14890203591417" path="/pages/success.xhtml"/>
+  <nodes xsi:type="pageflow:PFPage" name="pages/error.xhtml" id="pf148902035914110" referenceLink="//@navigationRule.0/@navigationCase.1/@toViewId|" inlinks="pf14890203591418" path="/pages/error.xhtml"/>
+  <links id="pf14890203591417" target="pf14890203591419" source="pf14890203591416" outcome="success"/>
+  <links id="pf14890203591418" target="pf148902035914110" source="pf14890203591416" outcome="error"/>
+</pageflow:Pageflow>

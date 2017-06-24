@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.modulo.promoVentas.mapper.VentaMapper">
+	<insert id="insertVenta" parameterType='com.modulo.promoVentas.bean.InsertVentaBean'
+		useGeneratedKeys='true' keyProperty='VT_CodigoVenta'>
+		Insert into co_venta
+		(VT_TipoDocumentoVenta,VT_DocumentoSerie, PE_CodigoPersonaCliente,
+		PE_CodigoPersonaTrabajador, VT_FechaVenta, VT_EstadoVenta,
+		VT_SubTotal, VT_ValorIGV, VT_Total) values
+		(#{tipoComprobanteId},#{codigoVenta},#{cliente.PE_CodigoPersona},
+		#{cliente.PE_CodigoPersona},#{fechaCreacion},1,#{subtotal},#{igv},#{total})
+	</insert>
+	<insert id="insertVentaTmp" parameterType='com.modulo.promoVentas.bean.InsertVentaBean'
+		useGeneratedKeys='true' keyProperty='VT_CodigoVenta'>
+		Insert into co_venta_tmp
+		(VT_TipoDocumentoVenta,VT_DocumentoSerie, PE_CodigoPersonaCliente,
+		PE_CodigoPersonaTrabajador, VT_FechaVenta, VT_EstadoVenta,
+		VT_SubTotal, VT_ValorIGV, VT_Total, PV_CodigoVenta) values
+		(#{tipoComprobanteId},#{codigoVenta},#{cliente.PE_CodigoPersona},
+		#{cliente.PE_CodigoPersona},#{fechaCreacion},1,#{subtotal},#{igv},#{total},#{idVentaSuspendida})
+	</insert>
+</mapper>

@@ -1,0 +1,29 @@
+
+create table ventas(
+	precio VARCHAR(50) not null,
+	comprador VARCHAR(200) not null
+);
+
+INSERT INTO ventas (precio, comprador) VALUES ("125", "John Poul");
+
+
+create table promocio(
+	nombre VARCHAR(50) not null,
+	validezDesde DATE not null,
+);
+
+INSERT INTO ventas (precio, comprador) VALUES ("125", "John Poul");
+
+
+CREATE TABLE `co_promocion` (
+  `PR_CodigoPromocion` int(11) NOT NULL AUTO_INCREMENT,
+  `PR_Nombre` varchar(50) DEFAULT NULL,
+  `PR_OpcionCliente` int(11) DEFAULT NULL,
+  `PR_OpcionProducto` int(11) DEFAULT NULL,
+  `PR_FechaInicio` date DEFAULT NULL,
+  `PR_FechaVenc` date DEFAULT NULL,
+  PRIMARY KEY (`PR_CodigoPromocion`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+INSERT INTO co_promocion (PR_CodigoPromocion, PR_Nombre, PR_OpcionCliente,  PR_OpcionProducto, PR_FechaInicio, PR_FechaVenc) VALUES (1,"promo1", 1, 1);

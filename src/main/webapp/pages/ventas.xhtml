@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+<style>
+ul.ui-menu {
+	width: 300px !important;
+}
+</style>
+<h:head />
+<h:body>
+	<h:form id="form">
+		<div class="ui-g">
+			<div class="ui-g-6">
+				<p:graphicImage library="img" name="logo.png" width="100"
+					height="100" />
+			</div>
+			<div class="ui-g-4" />
+			<div class="ui-g-2">Usuario Logueado</div>
+			<div class="ui-g-2">
+				<p:growl id="growl" showDetail="true" sticky="true" />
+			</div>
+		</div>
+
+		<div class="ui-g">
+			<div class="ui-g-12 ui-md-2">
+				<p:menu style="width: 150px;">
+					<p:menuitem value="Comercialización" url="/pages/ventas.jsf"
+						icon="ui-icon-plus" />
+					<p:menuitem value="Promociones" url="/pages/listadoPromociones.jsf"
+						icon="ui-icon-plus" />
+					<p:menuitem value="Reportes" actionListener="#{menuView.update}"
+						icon="ui-icon-plus" />
+					<p:menuitem value="Pagos" actionListener="#{menuView.update}"
+						icon="ui-icon-plus" />
+					<p:menuitem value="Despacho" actionListener="#{menuView.update}"
+						icon="ui-icon-plus" />
+					<p:menuitem value="Salir" actionListener="#{menuView.update}"
+						icon="ui-icon-plus" />
+				</p:menu>
+			</div>
+			<div class="ui-g-12 ui-md-10 ui-g-nopad">
+				<div class="ui-g">
+					<div class="ui-g-12">
+						<h2 style="margin-top: 0">Comercialización</h2>
+					</div>
+				</div>
+				<div class="ui-g">
+					<div class="ui-g-6 ui-g-nopad">
+						<p:fieldset legend="N.- Orden:  #{ventasManagedBean.codOrden}"
+							style="margin-bottom:20px">
+							<div class="ui-g-12">
+								<div class="ui-g-4">
+									<h:outputText for="name" value="Código: " />
+								</div>
+								<div class="ui-g-4">
+									<p:inputText id="name"
+										value="#{ventasManagedBean.codigoProducto}"
+										style="width: 50%;">
+										<p:ajax event="keyup"
+											listener="#{ventasManagedBean.buscarProducto}"
+											update="descrProd, precioProd, editProd" />
+									</p:inputText>
+									<p:message id="nameMsg" for="name" display="icon" />
+								</div>
+								<div class="ui-g-4">
+									<p:commandButton id="findProducto" value="Busqueda producto"
+										ajax="false" type="button" onclick="PF('dlg6').show();" />
+								</div>
+							</div>
+							<div class="ui-g-12">
+								<div class="ui-g-4">
+									<h:outputText for="name4" value="Descripción:" />
+								</div>
+
+								<div class="ui-g-8">
+									<p:inputText value="#{ventasManagedBean.descripcion}"
+										id="descrProd" style="width: 100%;">
+									</p:inputText>
+									<p:message id="nameMsg1" for="descrProd" display="icon" />
+								</div>
+							</div>
+							<div class="ui-g-12">
+								<div class="ui-g-4">
+									<h:outputLabel for="name2" value="Editorial:  " />
+								</div>
+
+								<div class="ui-g-8">
+									<p:inputText id="editProd"
+										value="#{ventasManagedBean.editorial}" style="width: 100%;">
+									</p:inputText>
+									<p:message id="nameMsg3" for="editProd" display="icon" />
+								</div>
+							</div>
+							<div class="ui-g-12">
+								<div class="ui-g-4">
+									<h:outputLabel for="name6" value="Precio:  " />
+								</div>
+
+								<div class="ui-g-4">
+									<p:inputText id="precioProd"
+										value="#{ventasManagedBean.precio}">
+									</p:inputText>
+									<p:message id="nameMsg6" for="precioProd" display="icon" />
+								</div>
+
+							</div>
+						</p:fieldset>
+					</div>
+					<div class="ui-g-6 ui-g-nopad">
+						<p:fieldset legend="Cliente" style="margin-bottom:20px">
+							<div class="ui-g-12">
+								<div class="ui-g-2">
+									<h:outputLabel for="validez_hasta" value="Cliente: " />
+								</div>
+								<div class="ui-g-8">
+									<p:autoComplete id="tDoc"
+										value="#{ventasManagedBean.tipoDocumento}"
+										completeMethod="#{ventasManagedBean.listTipoDocumento}"
+										converter="parametroConverter" var="tipoDocu"
+										itemLabel="#{tipoDocu.PD_NombreElemento}"
+										itemValue="#{tipoDocu}" dropdown="true" size="5" />
+									<p:inputText id="name7"
+										onkeypress="if (event.keyCode == 13) {onchange(); return false; }"
+										value="#{ventasManagedBean.numeroDocumento}">
+										<p:ajax event="change"
+											listener="#{ventasManagedBean.buscarPorDocumento}"
+											update="descrCliente" />
+									</p:inputText>
+								</div>
+							</div>
+							<div class="ui-g-12">
+								<div class="ui-g-2">
+									<h:outputLabel for="validez_hasta" value="Descripción: " />
+								</div>
+								<div class="ui-g-8">
+									<h:outputText id="descrCliente"
+										value="#{ventasManagedBean.descripcionCliente}" />
+								</div>
+								<div class="ui-g-2">
+									<p:commandButton id="addCliente" value="Agregar" ajax="false"
+										type="button" onclick="PF('dlg5').show();" />
+								</div>
+							</div>
+						</p:fieldset>
+
+						<p:fieldset legend="Tipo de comprobante"
+							style="margin-bottom:20px">
+							<div class="ui-g-12">
+								<p:selectOneRadio id="comp"
+									value="#{ventasManagedBean.tipoComprobante}">
+									<f:selectItem itemLabel="Boleta de venta" itemValue="boleta" />
+									<f:selectItem itemLabel="Factura" itemValue="factura" />
+								</p:selectOneRadio>
+							</div>
+						</p:fieldset>
+					</div>
+				</div>
+				<div class="ui-g">
+
+					<div class="ui-g-12">
+						<p:commandButton id="addProducto" value="Agregar producto"
+							action="#{ventasManagedBean.addProducto}" ajax="false" />
+					</div>
+					<div class="ui-g-8 ui-g-nopad">
+						<p:dataTable var="producto" value="#{ventasManagedBean.productos}"
+							id="tablaProds" rows="10" paginator="true"
+							paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+							rowsPerPageTemplate="5,10,15" editable="true" editMode="cell">
+							<p:ajax event="cellEdit"
+								listener="#{ventasManagedBean.onCellEdit}" />
+							<p:column headerText="Código">
+								<h:outputText value="#{producto.PD_CodigoProducto}" />
+							</p:column>
+							<p:column headerText="Cantidad">
+								<p:cellEditor>
+									<f:facet name="output">
+										<h:outputText value="#{producto.cantidad}" />
+									</f:facet>
+									<f:facet name="input">
+										<p:inputText id="modelInput" value="#{producto.cantidad}"
+											style="width:50%">
+											<p:ajax event="change"
+												listener="#{ventasManagedBean.modificarCantidad}"
+												update="form" />
+										</p:inputText>
+									</f:facet>
+								</p:cellEditor>
+							</p:column>
+							<p:column headerText="Producto">
+								<h:outputText value="#{producto.PD_Descripcion}" />
+							</p:column>
+							<p:column headerText="Descuento">
+								<h:outputText value="#{producto.descuento}" />
+							</p:column>
+							<p:column headerText="Precio unitario">
+								<h:outputText value="#{producto.PD_PrecioUnitario}" />
+							</p:column>
+							<p:column headerText="Total">
+								<h:outputText value="#{producto.total}" />
+							</p:column>
+							<p:column headerText="Opciones"
+								style="width:32px;text-align: center">
+								<p:commandButton update="tablaProds" icon="ui-icon-trash"
+									oncomplete="PF('dlg9').show()" title="Borrar">
+									<f:setPropertyActionListener value="#{producto}"
+										target="#{ventasManagedBean.selectedProducto}" />
+								</p:commandButton>
+							</p:column>
+						</p:dataTable>
+					</div>
+
+					<div class="ui-g-4 ui-g-nopad">
+						<div class="ui-g-12">
+							<p:panel header="Importe a pagar " style="margin-bottom:20px">
+								<h:panelGrid columns="1" cellpadding="10">
+									<p:outputLabel value="Subtotal: #{ventasManagedBean.subtotal}" />
+									<p:outputLabel value="IGV: #{ventasManagedBean.igv}" />
+									<h:outputText value="TOTAL: #{ventasManagedBean.total}" />
+								</h:panelGrid>
+							</p:panel>
+						</div>
+
+					</div>
+				</div>
+
+				<div class="ui-g">
+					<div class="ui-g-12">
+						<div class="ui-g-1" />
+						<div class="ui-g-4">
+							<p:commandButton id="suspender" value="Suspender venta"
+								type="button" onclick="PF('dlg11').show();" ajax="false" />
+							<p:commandButton id="reanudar" value="Reanudar venta"
+								action="#{ventasManagedBean.buscarSuspendidas}"
+								update="tablaReanudar" oncomplete="PF('dlg7').show();" />
+						</div>
+						<div class="ui-g-1" />
+						<div class="ui-g-4">
+							<p:commandButton id="genrar" value="Generar orden" ajax="false"
+								action="#{ventasManagedBean.validarOrden}"
+								onsuccess="PF('dlg3').show();" />
+							<p:commandButton id="cancelar" value="Cancelar orden"
+								type="button" onclick="PF('dlg4').show();" />
+						</div>
+					</div>
+				</div>
+
+
+			</div>
+		</div>
+		<p:dialog header="Eliminar producto" widgetVar="dlg2" modal="true"
+			height="100">
+			<div class="ui-g">
+				<div class="ui-g-12">
+					<h:outputText
+						value="¿Desea eliminar el producto de la orden de compra?" />
+				</div>
+				<div class="ui-g-12">
+					<p:commandButton id="ok" value="Aceptar"
+						action="#{ventasManagedBean.generarOrdenCompra}" ajax="true" />
+					<p:commandButton id="nook" value="Cancelar" ajax="false" />
+				</div>
+			</div>
+		</p:dialog>
+
+		<p:dialog header="Generar orden de compra" widgetVar="dlg3"
+			modal="true">
+			<div class="ui-g">
+				<div class="ui-g-12">
+					<h:outputText
+						value="¿Desea confirmar el registrar la orden de compra?" />
+				</div>
+				<div class="ui-g-6" />
+				<div class="ui-g-3">
+					<p:commandButton id="okOC" value="Aceptar"
+						action="#{ventasManagedBean.generarOrdenCompra}"
+						styleClass="ui-confirmdialog-yes" icon="ui-icon-check"
+						oncomplete="PF('dlg3').hide();" update="growl" />
+				</div>
+				<div class="ui-g-3">
+					<p:commandButton id="nookOC" value="Cancelar" ajax="false"
+						type="button" styleClass="ui-confirmdialog-no"
+						icon="ui-icon-close" onclick="PF('dlg3').hide();" />
+				</div>
+			</div>
+		</p:dialog>
+
+		<p:dialog header="Cancelar orden de compra" widgetVar="dlg4"
+			modal="true">
+			<div class="ui-g">
+				<div class="ui-g-12">
+					<h:outputText
+						value="¿Desea cancelar el registrar la orden de compra?" />
+				</div>
+				<div class="ui-g-6" />
+				<div class="ui-g-3">
+					<p:commandButton id="okNOC" value="Aceptar"
+						action="#{ventasManagedBean.cancelarOrdenCompra}" ajax="false"
+						styleClass="ui-confirmdialog-yes" oncomplete="dlg4.hide()"
+						icon="ui-icon-check" />
+				</div>
+				<div class="ui-g-3">
+					<p:commandButton id="nookNOC" value="Cancelar" ajax="false"
+						type="button" styleClass="ui-confirmdialog-no"
+						icon="ui-icon-close" onclick="PF('dlg4').hide();" />
+				</div>
+			</div>
+		</p:dialog>
+
+
+		<p:dialog header="Suspender orden de compra" widgetVar="dlg11"
+			modal="true">
+			<div class="ui-g">
+				<div class="ui-g-12">
+					<h:outputText value="¿Desea suspender la orden de compra?" />
+				</div>
+				<div class="ui-g-6" />
+				<div class="ui-g-3">
+					<p:commandButton id="susokNOC" value="Aceptar"
+						action="#{ventasManagedBean.suspenderVenta}" ajax="false"
+						styleClass="ui-confirmdialog-yes" oncomplete="dlg4.hide()"
+						icon="ui-icon-check" />
+				</div>
+				<div class="ui-g-3">
+					<p:commandButton id="susnookNOC" value="Cancelar" ajax="false"
+						type="button" styleClass="ui-confirmdialog-no"
+						icon="ui-icon-close" onclick="PF('dlg11').hide();" />
+				</div>
+			</div>
+		</p:dialog>
+
+
+		<p:dialog header="Eliminar producto" widgetVar="dlg9" modal="true">
+			<div class="ui-g">
+				<div class="ui-g-12">
+					<h:outputText
+						value="¿Desea eliminar el producto de la orden de compra?" />
+				</div>
+				<div class="ui-g-6" />
+				<div class="ui-g-3">
+					<p:commandButton id="elokNOC" value="Aceptar"
+						action="#{ventasManagedBean.eliminarProducto}" ajax="false"
+						styleClass="ui-confirmdialog-yes" oncomplete="dlg9.hide()"
+						icon="ui-icon-check" />
+				</div>
+				<div class="ui-g-3">
+					<p:commandButton id="elnookNOC" value="Cancelar" ajax="false"
+						type="button" styleClass="ui-confirmdialog-no"
+						icon="ui-icon-close" onclick="PF('dlg9').hide();" />
+				</div>
+			</div>
+		</p:dialog>
+
+		<p:dialog header="Nuevo Cliente" widgetVar="dlg5" modal="true"
+			width="800">
+			<div class="ui-g">
+				<div class="ui-g-8 ui-g-nopad">
+					<div class="ui-g-4">
+						<h:outputLabel value="Tipo cliente: " />
+					</div>
+					<div class="ui-g-6">
+						<p:autoComplete id="tipoP"
+							value="#{clienteManagedBean.tipoCliente}"
+							completeMethod="#{clienteManagedBean.listTipoClientes}"
+							converter="parametroConverter" var="tipoCliente"
+							itemLabel="#{tipoCliente.PD_NombreElemento}"
+							itemValue="#{tipoCliente}" dropdown="true">
+							<f:ajax event="itemSelect" execute="@this"
+								render="perfbyselection" />
+						</p:autoComplete>
+					</div>
+					<h:panelGroup id="perfbyselection">
+						<div class="ui-g-1" />
+						<div class="ui-g-4">
+							<h:outputLabel for="cltename" value="Nombres: "
+								rendered="#{clienteManagedBean.tipoCliente.PD_CodigoParametroDet eq '1'}" />
+							<h:outputLabel for="cltename" value="Razón Social: "
+								rendered="#{clienteManagedBean.tipoCliente.PD_CodigoParametroDet eq '2'}" />
+						</div>
+						<div class="ui-g-6">
+							<p:inputText id="cltename" value="#{clienteManagedBean.nombres}"
+								style="width: 100%;">
+								<f:validateLength minimum="2" />
+								<p:ajax event="blur" update="nameMsg" />
+							</p:inputText>
+							<p:message id="cltenameMsg" for="cltename" display="icon" />
+						</div>
+						<div class="ui-g-1">
+							<h:outputLabel value="*" />
+						</div>
+						<div class="ui-g-1" />
+						<div class="ui-g-4">
+							<h:outputLabel for="clteape" value="Apellidos: "
+								rendered="#{clienteManagedBean.tipoCliente.PD_CodigoParametroDet eq '1'}" />
+							<h:outputLabel for="cltename" value="Contacto: "
+								rendered="#{clienteManagedBean.tipoCliente.PD_CodigoParametroDet eq '2'}" />
+						</div>
+						<div class="ui-g-6">
+							<p:inputText id="clteape" value="#{clienteManagedBean.apellidos}"
+								style="width: 100%;">
+								<f:validateLength minimum="2" />
+								<p:ajax event="blur" update="nameMsg" />
+							</p:inputText>
+							<p:message id="clteapeMsg" for="clteape" display="icon" />
+						</div>
+						<div class="ui-g-1">
+							<h:outputLabel value="*" />
+						</div>
+						<div class="ui-g-1" />
+						<div class="ui-g-4">
+							<h:outputLabel value="Tipo documento: " />
+						</div>
+						<div class="ui-g-6">
+							<p:autoComplete id="tipo1"
+								value="#{clienteManagedBean.tipoDocumento}"
+								completeMethod="#{clienteManagedBean.listTipoDocumento}"
+								converter="parametroConverter" var="tipoD"
+								itemLabel="#{tipoD.PD_NombreElemento}" itemValue="#{tipoD}"
+								dropdown="true">
+								<f:ajax event="itemSelect" execute="@this"
+									render="perfbyselectionDOC" />
+							</p:autoComplete>
+
+						</div>
+
+						<h:panelGroup id="perfbyselectionDOC">
+							<div class="ui-g-1" />
+							<div class="ui-g-4">
+								<h:outputLabel for="cltename1" value="Número documento: " />
+							</div>
+							<div class="ui-g-6">
+								<p:inputText id="cltename1"
+									value="#{clienteManagedBean.numeroDocumento}"
+									style="width: 100%;">
+									<f:validateLength minimum="5" />
+									<p:ajax event="blur" update="cltenameMsg1" />
+								</p:inputText>
+								<p:message id="cltenameMsg1" for="cltename1" display="icon" />
+							</div>
+							<div class="ui-g-1" />
+							<div class="ui-g-4">
+								<h:outputLabel for="cltename2" value="Dirección: "
+									style="width: 100%;" />
+							</div>
+							<div class="ui-g-6">
+								<p:inputText id="cltename2"
+									value="#{clienteManagedBean.direccion}" style="width: 100%;">
+								</p:inputText>
+								<p:message id="cltenameMsg2" for="cltename2" display="icon" />
+							</div>
+							<div class="ui-g-1">
+								<h:outputLabel value="*"
+									rendered="#{clienteManagedBean.tipoDocumento.PD_CodigoParametroDet eq '29'}" />
+							</div>
+							<div class="ui-g-1" />
+							<div class="ui-g-4">
+								<h:outputLabel for="cltename3" value="Departamento: "
+									style="width: 100%;" />
+							</div>
+							<div class="ui-g-6">
+								<p:inputText id="cltename3"
+									value="#{clienteManagedBean.departamento}" style="width: 100%;">
+								</p:inputText>
+								<p:message id="cltenameMsg3" for="cltename3" display="icon" />
+							</div>
+							<div class="ui-g-1">
+								<h:outputLabel value="*"
+									rendered="#{clienteManagedBean.tipoDocumento.PD_CodigoParametroDet eq '29'}" />
+							</div>
+							<div class="ui-g-1" />
+							<div class="ui-g-4">
+								<h:outputLabel for="cltename4" value="Provincia: "
+									style="width: 100%;" />
+							</div>
+							<div class="ui-g-6">
+								<p:inputText id="cltename4"
+									value="#{clienteManagedBean.provincia}" style="width: 100%;">
+								</p:inputText>
+								<p:message id="cltenameMsg4" for="cltename4" display="icon" />
+							</div>
+							<div class="ui-g-1">
+								<h:outputLabel value="*"
+									rendered="#{clienteManagedBean.tipoDocumento.PD_CodigoParametroDet eq '29'}" />
+							</div>
+							<div class="ui-g-1" />
+							<div class="ui-g-4">
+								<h:outputLabel for="cltename5" value="Distrito "
+									style="width: 100%;" />
+							</div>
+							<div class="ui-g-6">
+								<p:inputText id="cltename5"
+									value="#{clienteManagedBean.distrito}" style="width: 100%;">
+								</p:inputText>
+								<p:message id="cltenameMsg5" for="cltename5" display="icon" />
+							</div>
+							<div class="ui-g-1">
+								<h:outputLabel value="*"
+									rendered="#{clienteManagedBean.tipoDocumento.PD_CodigoParametroDet eq '29'}" />
+							</div>
+							<div class="ui-g-1" />
+							<div class="ui-g-4">
+								<h:outputLabel for="cltename6" value="Teléfono celular: " />
+							</div>
+							<div class="ui-g-6">
+								<p:inputText id="cltename6"
+									value="#{clienteManagedBean.telefono}" style="width: 100%;">
+								</p:inputText>
+								<p:message id="cltenameMsg6" for="cltename6" display="icon" />
+							</div>
+							<div class="ui-g-1" />
+							<div class="ui-g-4">
+								<h:outputLabel for="cltename7" value="Correo electrónico: " />
+							</div>
+							<div class="ui-g-6">
+								<p:inputText id="cltename7" value="#{clienteManagedBean.email}"
+									style="width: 100%;">
+									<f:validateLength minimum="5" />
+									<p:ajax event="blur" update="cltenameMsg7" />
+								</p:inputText>
+								<p:message id="cltenameMsg7" for="cltename7" display="icon" />
+							</div>
+
+						</h:panelGroup>
+					</h:panelGroup>
+				</div>
+				<div class="ui-g-4 ui-g-nopad">
+					<div class="ui-g-12">
+						<p:selectOneRadio id="tcliente"
+							value="#{clienteManagedBean.minorista}">
+							<f:selectItem itemLabel="Cliente minorista" itemValue="minorista" />
+							<f:selectItem itemLabel="Cliente mayorista" itemValue="mayorista" />
+						</p:selectOneRadio>
+					</div>
+				</div>
+
+			</div>
+
+			<div class="ui-g">
+				<div class="ui-g-6" />
+				<div class="ui-g-6">
+					<p:commandButton id="addPromocion" value="Agregar Cliente"
+						action="#{clienteManagedBean.addCliente}" ajax="false" />
+
+						<p:commandButton id="cancelarCliente" value="Cancelar" ajax="false" type="button" onclick="PF('dlg5').hide();" >
+						
+						<p:confirm header="Confirmation" message="Desea cancelar el registro del cliente?" icon="ui-icon-alert" />
+						</p:commandButton>
+				</div>
+			</div>
+		</p:dialog>
+		
+		<p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+        				<p:commandButton value="Aceptar" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+        				<p:commandButton value="Cancelar" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+		</p:confirmDialog>	
+		
+		
+		<p:dialog header="Búsqueda de producto" widgetVar="dlg6" modal="true"
+			id="dialog" width="800">
+			<div class="ui-g">
+				<div class="ui-g-4">
+					<h:outputLabel for="busqname" value="Escribir palabra o frase: " />
+					<p:inputText id="busqname"
+						value="#{listadoProductosManagedBean.frase}">
+						<f:validateLength minimum="3" />
+						<p:ajax event="blur" update="busqnameMsg" />
+					</p:inputText>
+					<p:message id="busqnameMsg" for="busqname" display="icon" />
+				</div>
+				<div class="ui-g-4">
+					<h:outputLabel for="busqcampo" value="Campo de búsqueda: " />
+					<p:autoComplete id="busqtipoP"
+						value="#{listadoProductosManagedBean.campo}"
+						completeMethod="#{listadoProductosManagedBean.listCampo}"
+						converter="parametroTipoConverter" var="campoBusq"
+						itemLabel="#{campoBusq.PD_NombreElemento}"
+						itemValue="#{campoBusq}" dropdown="true" />
+				</div>
+				<div class="ui-g-4">
+					<h:outputLabel for="busqtipoPro" value="Tipo producto: " />
+					<p:autoComplete id="busqtipoP1"
+						value="#{listadoProductosManagedBean.tipoProducto}"
+						completeMethod="#{listadoProductosManagedBean.listTiposProducto}"
+						converter="parametroConverter" var="tipoProd"
+						itemLabel="#{tipoProd.PD_NombreElemento}" itemValue="#{tipoProd}"
+						dropdown="true" />
+				</div>
+			</div>
+
+			<div class="ui-g">
+				<div class="ui-g-4"></div>
+				<div class="ui-g-4" />
+				<div class="ui-g-2">
+					<p:commandButton id="addProd" value="Buscar"
+						action="#{listadoProductosManagedBean.findProducto}"
+						update="tabla" oncomplete="dlg6.show()" />
+				</div>
+			</div>
+			<p:dataTable id="tabla" var="producto"
+				value="#{listadoProductosManagedBean.productos}"
+				selection="#{listadoProductosManagedBean.selectedProd}"
+				rowKey="#{producto.PD_CodigoProducto}">
+				<p:column selectionMode="single"
+					style="width:16px;text-align:center" />
+				<p:column headerText="Código">
+					<h:outputText value="#{producto.PD_CodigoProducto}" />
+				</p:column>
+				<p:column headerText="Texto">
+					<h:outputText value="#{producto.TX_Titulo}" />
+				</p:column>
+				<p:column headerText="Autor">
+					<h:outputText value="#{producto.nombreCompletoAutor}" />
+				</p:column>
+				<p:column headerText="Editorial">
+					<h:outputText value="#{producto.ED_Nombre}" />
+				</p:column>
+				<p:column headerText="Ubicación">
+					<h:outputText />
+				</p:column>
+				<p:column headerText="Precio unitario">
+					<h:outputText value="#{producto.PD_PrecioUnitario}" />
+				</p:column>
+				<p:column headerText="Tipo">
+					<h:outputText
+						value="#{listadoProductosManagedBean.tipoProducto.PD_NombreElemento}" />
+				</p:column>
+			</p:dataTable>
+			<p:commandButton id="addProdu" value="Agregar Producto"
+				action="#{listadoProductosManagedBean.cargarProducto}" ajax="false" />
+		</p:dialog>
+
+		<p:dialog header="Reanudar orden de compra" widgetVar="dlg7"
+			modal="true" id="dialog1" width="800">
+			<p:dataTable id="tablaReanudar" var="suspendida"
+				value="#{ventasManagedBean.ventasSuspendidas}"
+				selection="#{ventasManagedBean.selectedVentaSuspendida}"
+				rowKey="#{suspendida.VT_CodigoVenta}">
+				<p:column selectionMode="single"
+					style="width:16px;text-align:center" />
+				<p:column headerText="Cliente">
+					<h:outputText value="#{suspendida.nombreCompleto}" />
+				</p:column>
+				<p:column headerText="Tipo de documento">
+					<h:outputText value="#{suspendida.tipoDocumento}" />
+				</p:column>
+				<p:column headerText="Número de documento">
+					<h:outputText value="#{suspendida.PE_NumeroDocIdentidad}" />
+				</p:column>
+				<p:column headerText="Fecha Hora">
+					<h:outputText value="#{suspendida.VT_FechaVenta}" />
+				</p:column>
+				<p:column headerText="Monto a pagar">
+					<h:outputText value="#{suspendida.VT_Total}" />
+				</p:column>
+			</p:dataTable>
+			<p:commandButton id="reanudar1" value="Restaurar"
+				action="#{ventasManagedBean.reanudarVenta}" ajax="false" />
+		</p:dialog>
+	</h:form>
+</h:body>
+</html>

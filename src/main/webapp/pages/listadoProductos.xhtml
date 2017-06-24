@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+<h:head />
+<h:body>
+	<h:form>
+		<div class="ui-g">
+			<div class="ui-g-6">
+				<p:graphicImage library="img" name="logo.png"  width="100" height="100"/>
+			</div>
+			<div class="ui-g-4" />
+			<div class="ui-g-2">Usuario Logueado</div>
+		</div>
+
+		<div class="ui-g">
+			<div class="ui-g-12">
+				<h2 style="margin-top: 0">Listado de promociones</h2>
+			</div>
+		</div>
+
+		<!-- Filtros -->
+		<div class="ui-g">
+			<div class="ui-g-4">
+				<h:outputLabel for="name" value="Escribir palabra o frase: " />
+				<p:inputText id="name"
+					value="#{listadoProductosManagedBean.frase}">
+					<f:validateLength minimum="5" />
+					<p:ajax event="blur" update="nameMsg" />
+				</p:inputText>
+				<p:message id="nameMsg" for="name" display="icon" />
+			</div>
+			<div class="ui-g-4">
+				<h:outputLabel for="campo" value="Campo de búsqueda: " />
+				<p:autoComplete id="tipoP"
+					value="#{listadoProductosManagedBean.campo}"
+					completeMethod="#{listadoProductosManagedBean.listCampo}"
+					converter="parametroTipoConverter" var="campoBusq"
+					itemLabel="#{campoBusq.PD_NombreElemento}" itemValue="#{campoBusq}"
+					dropdown="true" />
+			</div>
+			<div class="ui-g-4">
+				<h:outputLabel for="tipoPro" value="Tipo producto: " />
+				<p:autoComplete id="tipoP1"
+					value="#{listadoProductosManagedBean.tipoProducto}"
+					completeMethod="#{listadoProductosManagedBean.listTiposProducto}"
+					converter="parametroTipoConverter" var="tipoProd"
+					itemLabel="#{tipoProd.PD_NombreElemento}" itemValue="#{tipoProd}"
+					dropdown="true" />
+			</div>
+		</div>
+
+		<div class="ui-g">
+			<div class="ui-g-4"></div>
+			<div class="ui-g-4" />
+			<div class="ui-g-2">
+				<p:commandButton id="addPromocion" value="Buscar"
+					action="#{listadoProductosManagedBean.findProducto}" ajax="false" />
+			</div>
+		</div>
+		<p:dataTable var="producto"
+			value="#{listadoProductosManagedBean.productos}" rows="10"
+			paginator="true"
+			paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+			rowsPerPageTemplate="5,10,15">
+			<p:column headerText="Selec">
+				<h:outputText value="#{producto.PD_CodigoProducto}" />
+			</p:column>
+			<p:column headerText="Código">
+				<h:outputText value="#{producto.PD_CodigoProducto}" />
+			</p:column>
+			<p:column headerText="Texto">
+				<h:outputText value="#{producto.TX_CodigoTexto}" />
+			</p:column>
+			<p:column headerText="Autor">
+				<h:outputText value="#{producto.TX_CodigoTexto}" />
+			</p:column>
+			<p:column headerText="Editorial">
+				<h:outputText value="#{producto.TX_CodigoTexto}" />
+			</p:column>
+			<p:column headerText="Ubicación">
+				<h:outputText value="#{producto.TX_CodigoTexto}" />
+			</p:column>
+			<p:column headerText="Precio unitario">
+				<h:outputText value="#{producto.PD_PrecioUnitario}" />
+			</p:column>
+			<p:column headerText="Tipo">
+				<h:outputText value="#{producto.PD_TipoProducto}" />
+			</p:column>
+		</p:dataTable>
+	</h:form>
+</h:body>
+</html>

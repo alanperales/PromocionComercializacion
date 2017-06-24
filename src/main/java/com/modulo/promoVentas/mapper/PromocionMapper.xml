@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.modulo.promoVentas.mapper.PromocionMapper">
+	<insert id="insertPromocion" parameterType='com.modulo.promoVentas.model.Promocion'
+		useGeneratedKeys='true' keyProperty='pr_codigoPromocion'>
+		insert into co_promocion
+		(PR_Nombre, PR_OpcionCliente, PR_OpcionProducto, PR_FechaInicio,
+		PR_FechaVenc, PR_TipoPromocion, PR_fechaInsercion, PR_EstadoPromocion) values (
+		#{pr_nombre},
+		#{pr_opcionCliente},
+		#{pr_opcionProducto}, #{pr_fechaInicio},
+		#{pr_fechaVenc}, #{pr_tipoPromocion}, #{pr_fechaInsercion}, 29)
+	</insert>
+
+	<select id="findPromocionesByDateAndClient" resultType='DatosPromocion'
+		parameterType='com.modulo.promoVentas.bean.FindPromocionesBean'>
+		<bind name="pattern" value="'%' + pr_nombre + '%'" />
+		<bind name="pattern1" value="'%' + cliente + '%'" />
+		<bind name="pattern2" value="'%' + producto + '%'" />
+		SELECT p.pr_codigoPromocion, pr_nombre, pr_fechaInicio, pr_fechaVenc,pr_fechaInsercion, pr_opcionProducto, pr_opcionCliente,
+		pr_TipoPromocion, par.PD_NombreElemento as tipoPromo, par1.PD_NombreElemento as estadoPromo,
+		reg.RL_DescontarEn, reg.RL_BajarPrecioUnitEn, reg.RL_PorCada, reg.RL_CostoBajaEn,
+		reg.RL_MontoMayorA, reg.RL_DescuentoDe, RL_TipoProducto, RL_TipoCliente, RL_ProdGenero
+		from co_promocion p, co_promociocliente pcl,
+		tb_persona per, lb_parametricadet par, lb_parametricadet par1, co_regla reg
+		where
+		p.PR_CodigoPromocion > 0
+		and p.PR_CodigoPromocion =
+		pcl.PR_CodigoPromocion
+		and pcl.PE_CodigoPersona = per.PE_CodigoPersona
+		and par.PD_CodigoParametroDet = p.PR_TipoPromocion
+		and par1.PD_CodigoParametroDet = p.PR_EstadoPromocion
+		and reg.PR_CodigoPromocion = p.PR_CodigoPromocion
+		<if test="pr_fechaInicio != null">
+			and PR_FechaInicio >= #{pr_fechaInicio}
+		</if>
+		<if test="pr_fechaVenc != null">
+			<![CDATA[and PR_FechaVenc <= #{pr_fechaVenc}]]>
+		</if>
+		<if test="tipoPromocion != null and tipoPromocion != 0">
+			AND pr_tipoPromocion = #{tipoPromocion}
+		</if>
+		<if test="estadoPromocion != null and estadoPromocion != 0">
+			AND pr_estadoPromocion = #{estadoPromocion}
+		</if>
+		<if test="pr_nombre != null and pr_nombre != ''">
+			AND pr_nombre like #{pattern}
+		</if>
+		<if test="cliente != null and cliente != ''">
+			AND (per.PE_Nombre like #{pattern1} OR
+			per.PE_ApellidoPaterno like #{pattern1})
+		</if>
+	</select>
+	<select id="findPromocionesByDate" resultType='DatosPromocion'
+		parameterType='com.modulo.promoVentas.bean.FindPromocionesBean'>
+		<bind name="pattern" value="'%' + pr_nombre + '%'" />
+		<bind name="pattern1" value="'%' + cliente + '%'" />
+		<bind name="pattern2" value="'%' + producto + '%'" />
+		SELECT p.pr_codigoPromocion, pr_nombre, pr_fechaInicio,pr_fechaVenc,pr_fechaInsercion, pr_opcionProducto,pr_opcionCliente,
+		pr_TipoPromocion, par.PD_NombreElemento as tipoPromo, par1.PD_NombreElemento as estadoPromo,
+		reg.RL_DescontarEn, reg.RL_BajarPrecioUnitEn, reg.RL_PorCada, reg.RL_CostoBajaEn,
+		reg.RL_MontoMayorA, reg.RL_DescuentoDe, RL_TipoProducto, RL_TipoCliente, RL_ProdGenero
+		from co_promocion p, lb_parametricadet par, lb_parametricadet par1, co_regla reg
+		where p.PR_CodigoPromocion > 0
+		and par.PD_CodigoParametroDet = p.PR_TipoPromocion
+		and par1.PD_CodigoParametroDet = p.PR_EstadoPromocion
+		and reg.PR_CodigoPromocion = p.PR_CodigoPromocion
+		<if test="pr_fechaInicio != null">
+			and PR_FechaInicio >= #{pr_fechaInicio}
+		</if>
+		<if test="pr_fechaVenc != null">
+			<![CDATA[and PR_FechaVenc <= #{pr_fechaVenc}]]>
+		</if>
+		<if test="tipoPromocion != null and tipoPromocion != 0">
+			AND pr_tipoPromocion = #{tipoPromocion}
+		</if>
+		<if test="estadoPromocion != null and estadoPromocion != 0">
+			AND pr_estadoPromocion = #{estadoPromocion}
+		</if>
+		<if test="pr_nombre != null and pr_nombre != ''">
+			AND pr_nombre like #{pattern}
+		</if>
+	</select>
+
+	<select id="findPromocionesByDateAndProduct" resultType='DatosPromocion'
+		parameterType='com.modulo.promoVentas.bean.FindPromocionesBean'>
+		<bind name="pattern" value="'%' + pr_nombre + '%'" />
+		<bind name="pattern1" value="'%' + cliente + '%'" />
+		<bind name="pattern2" value="'%' + producto + '%'" />
+		SELECT p.pr_codigoPromocion, pr_nombre, pr_fechaInicio,pr_fechaVenc,pr_fechaInsercion, pr_opcionProducto,pr_opcionCliente,
+		pr_TipoPromocion, par.PD_NombreElemento as tipoPromo, par1.PD_NombreElemento as estadoPromo,
+		reg.RL_DescontarEn, reg.RL_BajarPrecioUnitEn, reg.RL_PorCada, reg.RL_CostoBajaEn,
+		reg.RL_MontoMayorA, reg.RL_DescuentoDe, RL_TipoProducto, RL_TipoCliente, RL_ProdGenero
+		from co_promocion p, co_promocionprod cprod, co_producto prod, 
+		lb_parametricadet par, lb_parametricadet par1, co_regla reg
+		where p.PR_CodigoPromocion > 0 
+		and p.PR_CodigoPromocion = cprod.PR_CodigoPromocion
+		and cprod.PD_CodigoProducto = prod.PD_CodigoProducto
+		and par.PD_CodigoParametroDet = p.PR_TipoPromocion
+		and par1.PD_CodigoParametroDet = p.PR_EstadoPromocion
+		and reg.PR_CodigoPromocion = p.PR_CodigoPromocion
+		<if test="pr_fechaInicio != null">
+			and PR_FechaInicio >= #{pr_fechaInicio}
+		</if>
+		<if test="pr_fechaVenc != null">
+			<![CDATA[and PR_FechaVenc <= #{pr_fechaVenc}]]>
+		</if>
+		<if test="tipoPromocion != null and tipoPromocion != 0">
+			AND pr_tipoPromocion = #{tipoPromocion}
+		</if>
+		<if test="estadoPromocion != null and estadoPromocion != 0">
+			AND pr_estadoPromocion = #{estadoPromocion}
+		</if>
+		<if test="pr_nombre != null and pr_nombre != ''">
+			AND pr_nombre like #{pattern}
+		</if>
+		<if test="producto != null and producto != ''">
+			AND prod.PD_Descripcion like #{pattern2}
+		</if>
+	</select>
+
+	<select id="findPromocionesByAll" resultType='DatosPromocion'
+		parameterType='com.modulo.promoVentas.bean.FindPromocionesBean'>
+		<bind name="pattern" value="'%' + pr_nombre + '%'" />
+		<bind name="pattern1" value="'%' + cliente + '%'" />
+		<bind name="pattern2" value="'%' + producto + '%'" />
+		SELECT p.pr_codigoPromocion, pr_nombre, pr_fechaInicio,pr_fechaVenc,pr_fechaInsercion, pr_opcionProducto,pr_opcionCliente,
+		pr_TipoPromocion, par.PD_NombreElemento as tipoPromo, par1.PD_NombreElemento as estadoPromo,
+		reg.RL_DescontarEn, reg.RL_BajarPrecioUnitEn, reg.RL_PorCada, reg.RL_CostoBajaEn,
+		reg.RL_MontoMayorA, reg.RL_DescuentoDe, RL_TipoProducto, RL_TipoCliente, RL_ProdGenero
+		from co_promocion p, co_promocionprod cprod, co_producto prod, co_promociocliente pcl,
+		tb_persona per, lb_parametricadet par, lb_parametricadet par1, co_regla reg
+		where p.PR_CodigoPromocion > 0 
+		and p.PR_CodigoPromocion = cprod.PR_CodigoPromocion
+		and cprod.PD_CodigoProducto = prod.PD_CodigoProducto
+		and p.PR_CodigoPromocion = pcl.PR_CodigoPromocion
+		and pcl.PE_CodigoPersona = per.PE_CodigoPersona
+		and par.PD_CodigoParametroDet = p.PR_TipoPromocion
+		and par1.PD_CodigoParametroDet = p.PR_EstadoPromocion
+		and reg.PR_CodigoPromocion = p.PR_CodigoPromocion
+		<if test="pr_fechaInicio != null">
+			and PR_FechaInicio >= #{pr_fechaInicio}
+		</if>
+		<if test="pr_fechaVenc != null">
+			<![CDATA[and PR_FechaVenc <= #{pr_fechaVenc}]]>
+		</if>
+		<if test="tipoPromocion != null and tipoPromocion != 0">
+			AND pr_tipoPromocion = #{tipoPromocion}
+		</if>
+		<if test="estadoPromocion != null and estadoPromocion != 0">
+			AND pr_estadoPromocion = #{estadoPromocion}
+		</if>
+		<if test="pr_nombre != null and pr_nombre != ''">
+			AND pr_nombre like #{pattern}
+		</if>
+		<if test="producto != null and producto != ''">
+			AND prod.PD_Descripcion like #{pattern2}
+		</if>
+		<if test="cliente != null and cliente != ''">
+			AND (per.PE_Nombre like #{pattern1} OR
+			per.PE_ApellidoPaterno like #{pattern1})
+		</if>
+	</select>
+</mapper>
